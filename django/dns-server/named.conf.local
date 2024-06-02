@@ -1,0 +1,17 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "arpitpatil.com" {
+ type master;
+ file "/etc/bind/forward.arpitpatil.com";
+};
+
+zone "0.0.127.in-addr-arpa" {
+ type master;
+ file "/etc/bind/reverse.arpitpatil.com";
+};

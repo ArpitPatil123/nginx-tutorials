@@ -1,0 +1,20 @@
+services:
+  nginx:
+    build:
+      context: ./nginx/
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx/html/:/usr/share/nginx/html/
+
+  dns:
+    build:
+      context: ./dns/
+    restart: always
+    ports:
+      - 1053:53/tcp    
+      - 1053:53/udp
+    volumes:
+      - ./dns/named.conf:/etc/bind/named.conf
+      - ./dns/zone/:/etc/bind/zone/
+    command: named -c /etc/bind/named.conf -g -u named

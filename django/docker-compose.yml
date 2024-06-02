@@ -1,0 +1,37 @@
+services:
+  web:
+    build:
+      context: .
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn demo.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app/
+      - ./staticfiles:/app/staticfiles
+    # ports:
+    #   - 8000:8000
+    expose:
+      - 8000
+    env_file:
+      - ../.env/dev.env
+    networks:
+      - django-deployment
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./staticfiles:/home/app/staticfiles
+    networks:
+      - django-deployment
+
+volumes:
+  static_files:
+
+networks:
+  django-deployment:
+    driver: bridge
+      
