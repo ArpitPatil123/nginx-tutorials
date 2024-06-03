@@ -13,8 +13,6 @@ services:
       - 8000
     env_file:
       - ../.env/dev.env
-    networks:
-      - django-deployment
 
   nginx:
     build:
@@ -25,13 +23,21 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./staticfiles:/home/app/staticfiles
-    networks:
-      - django-deployment
+
+  dns:
+    build:
+      dockerfile: ./dns-server/Dockerfile
+    restart: always
+    ports:
+      - 53:53/tcp    
+      - 53:53/udp
+    volumes:
+      - ./dns-server/forward.arpitpatil.com:/etc/bind/forward.arpitpatil.com
+      - ./dns-server/reverse.arpitpatil.com:/etc/bind/reverse.arpitpatil.com
+      - ./dns-server/named.conf.local:/etc/bind/named.conf.local
+      - ./dns-server/named.conf.options:/etc/bind/named.conf.options
+    network_mode: host
 
 volumes:
   static_files:
-
-networks:
-  django-deployment:
-    driver: bridge
       
